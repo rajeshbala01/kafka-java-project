@@ -30,10 +30,10 @@ public class twitterProducer {
 
 	Logger logger = LoggerFactory.getLogger(twitterProducer.class.getName());
 
-	String consumerKey = "4juN0PiNaOEfxDWpbyzUopN9V";
-	String consumerSecret = "85tLwTirbewWlAWyQg5LDOPSuzKocNzjfg53A8Ch6iDxqW3ifG";
-	String token = "1326065084892766208-U0X5gD4hOybbdAI8a0fJCfmJRF8s3e";
-	String secret = "eJNhsQL4Ol6HZkXGTshV9Aqcz1y0rOFVYMVtsviDB3PgY";
+	String consumerKey = "";
+	String consumerSecret = "";
+	String token = "";
+	String secret = "";
 	String kafkatopic = "twitter-tweets";
 
 	public twitterProducer() {
