@@ -103,8 +103,8 @@ public class elasticSearchConsumer {
 	public static RestHighLevelClient createElasticseachclient() {
 
 		String hostName = "kafka-twitter-consum-193369953.us-east-1.bonsaisearch.net";
-		String userName = "dt2yjwyh4m";
-		String password = "44dcijesw7";
+		String userName = "";
+		String password = "";
 
 		final CredentialsProvider credentialProvider = new BasicCredentialsProvider();
 
