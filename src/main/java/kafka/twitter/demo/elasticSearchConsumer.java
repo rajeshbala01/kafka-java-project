@@ -36,8 +36,8 @@ public class elasticSearchConsumer {
 
 		Logger logger = LoggerFactory.getLogger(elasticSearchConsumer.class.getName());
 
-		String topic = "twitter_status_connect";
-		String bootstrapServer = "13.59.167.188:9092";
+		String topic = "twitter-tweets";
+		String bootstrapServer = "18.191.92.35:9092";
 
 		RestHighLevelClient client = createElasticseachclient();
 
@@ -54,9 +54,10 @@ public class elasticSearchConsumer {
 			if (maxretryCount > retryCount) {
 
 				ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(3000));
-
-				logger.info("received " + records.count() + " records.......");
 				int recordCount = records.count();
+				
+				logger.info("received " + recordCount + " records.......");
+				
 				BulkRequest bulkRequest = new BulkRequest();
 
 				for (ConsumerRecord<String, String> record : records) {

@@ -47,7 +47,7 @@ public class twitterProducer {
 	}
 
 	public void run() {
-		
+
 		logger.info("Start the twitter clinet");
 		/**
 		 * Set up your blocking queues: Be sure to size these properly based on expected
@@ -59,25 +59,29 @@ public class twitterProducer {
 		client.connect();
 
 		// Create kafka Producer
-		
-		KafkaProducer<String, String> producer = createKafkaProducer();
-		
-		//add shutdown hook
-		
+
+		String bootstrapServer = "18.191.92.35:9092";
+		String topic = "twitter-tweets";
+
+		final KafkaProducer<String, String> producer = createKafkaProducer(bootstrapServer);
+
+		// add shutdown hook
+
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-			
+
 			logger.info("Stopping twitter client...........");
 			client.stop();
 			logger.info("Stopping twitter producer.........");
 			producer.close();
-					
+
 		}));
 
 		// Send tweet to kafka
 
 		// on a different thread, or multiple different threads....
 		while (!client.isDone()) {
-			String msg=null;;
+			String msg = null;
+			;
 			try {
 				msg = msgQueue.poll(5, TimeUnit.SECONDS);
 			} catch (InterruptedException e) {
@@ -85,10 +89,9 @@ public class twitterProducer {
 				e.printStackTrace();
 				client.stop();
 			}
-			
-			if(msg!=null) {
-				ProducerRecord<String, String> record = new ProducerRecord<String, String>(
-						"twitter-tweets",null, msg);
+
+			if (msg != null) {
+				ProducerRecord<String, String> record = new ProducerRecord<String, String>(topic, null, msg);
 
 				producer.send(record, new Callback() {
 					public void onCompletion(RecordMetadata recordMetadata, Exception e) {
@@ -105,7 +108,7 @@ public class twitterProducer {
 
 				});
 			}
-			
+
 		}
 
 	}
@@ -139,13 +142,13 @@ public class twitterProducer {
 
 	}
 
-	public KafkaProducer<String, String> createKafkaProducer() {
+	public KafkaProducer<String, String> createKafkaProducer(String bootstrapServer) {
 
 		// Set kafka Properties
 
 		Properties props = new Properties();
 
-		props.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "13.59.167.188:9092");
+		props.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);
 		props.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
 		props.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
 		props.setProperty(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, "true");
