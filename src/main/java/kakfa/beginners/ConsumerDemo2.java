@@ -13,21 +13,23 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ConsumerDemo {
+public class ConsumerDemo2 {
 	
 	public static void main(String[] args) {
 		
-		final Logger logger = LoggerFactory.getLogger(ConsumerDemo.class);
+		final Logger logger = LoggerFactory.getLogger(ConsumerDemo2.class);
 		String topic = "demo-producer";
 		
 		//set Consumer Properties
 		
 		Properties props = new Properties();
 		props.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "18.216.131.173:9092");
-		props.setProperty(ConsumerConfig.GROUP_ID_CONFIG, "consumer-group");
+		props.setProperty(ConsumerConfig.GROUP_ID_CONFIG, "consumer-group-2");
 		props.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
 		props.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
 		props.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+		props.setProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");
+		props.setProperty(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "5");
 				
 		//Create consumer
 		
@@ -54,7 +56,7 @@ public class ConsumerDemo {
 		
 		if (maxretryCount>retryCount) {
 		
-		ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(1000));
+		ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(5000));
 		
 		if (records.count() > 0) {
 		
@@ -62,6 +64,9 @@ public class ConsumerDemo {
 				
 				logger.info("key: " + record.key() + ", Offset: " + record.offset()+", Timestamp: "+record.timestamp());
 			}
+		
+		logger.info("Commit the offset");
+		consumer.commitSync();
 		}
 		else {
 			

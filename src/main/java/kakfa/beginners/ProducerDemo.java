@@ -21,13 +21,12 @@ public class ProducerDemo {
 
 		Properties props = new Properties();
 
-		props.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "18.216.133.220:9092");
+		props.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "18.216.131.173:9092");
 		props.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
 		props.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
 		props.setProperty(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, "true");
-		props.setProperty(ProducerConfig.COMPRESSION_TYPE_CONFIG, "snappy");
-		props.setProperty(ProducerConfig.BATCH_SIZE_CONFIG, "32767");
-		props.setProperty(ProducerConfig.LINGER_MS_CONFIG, "10");
+		props.setProperty(ProducerConfig.BATCH_SIZE_CONFIG, "32767"); //batch records together into fewer requests whenever multiple records are being sent to the same partition
+		props.setProperty(ProducerConfig.LINGER_MS_CONFIG, "10"); //This setting gives the upper bound on the delay for batching: once we get BATCH_SIZE_CONFIG worth of records for a partition it will be sent immediately regardless of this setting
 
 		// Create kafka producer
 
@@ -37,7 +36,7 @@ public class ProducerDemo {
 
 		for (int i = 0; i < 10; i++) {
 			ProducerRecord<String, String> record = new ProducerRecord<String, String>(
-					"twitter_status_connect",
+					"demo-producer",
 					"id_"+ Integer.toString(i), 
 					"Test message - " + Integer.toString(i));
 
@@ -58,6 +57,8 @@ public class ProducerDemo {
 		}
 
 		producer.close();
+		
+		logger.info("CLosing the Producer");
 
 	}
 	
